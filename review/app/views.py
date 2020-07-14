@@ -22,6 +22,7 @@ def product_view(request, pk):
     product = get_object_or_404(Product, id=pk)
     form = ReviewForm
     list_reviews = Review.objects.filter(product_id=pk)
+    request.session['is_review_exist'] = list()
     for i in list_reviews:
         if i.product_id not in request.session['is_review_exist']:
             request.session['is_review_exist'].append(i.product_id)
@@ -35,6 +36,7 @@ def product_view(request, pk):
     if request.method == "GET":
         if product.id in request.session['is_review_exist']:
             context.update({"is_review_exist": True})
+
         return render(request, template, context)
     if request.method == 'POST':
         form = ReviewForm(request.POST)
@@ -43,7 +45,7 @@ def product_view(request, pk):
             review.text = form.cleaned_data.get('text')
             review.product_id = pk
             review.save()
-            if pk not in request.request.session["is_review_exist"]:
-                request.session["is_review_exist"].append(pk)
+            request.session["is_review_exist"].append(pk)
+            request.session.save()
 
         return redirect(request.path)
