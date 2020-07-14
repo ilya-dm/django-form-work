@@ -28,4 +28,4 @@ class Review(models.Model):
     class Meta:
         verbose_name = "Обзор"
         verbose_name_plural = "Обзоры"
-        ordering = ["-id"].reverse()
+        ordering = ["-id"]
